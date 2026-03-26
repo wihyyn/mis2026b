@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>微氏玉映簡介</title>
+
+	<style type="text/css">
+		* { font-family:"標楷體"; margin-left:auto; margin-right:auto;}
+		h1 {color:lightblue; font-size:60px;}
+		h2 {color:#c48be0; font-size:40px;}
+	</style>
+
+	<script>
+		function change1() {
+  			document.getElementById("pic").src = "/static/mountain.jpg";
+  			document.getElementById("h2text").innerText = "靜宜資管";
+		}
+
+		function change2() {
+  			document.getElementById("pic").src = "/static/cliff.jpg";
+  			document.getElementById("h2text").innerText = "Vi Thi Ngoc Anh";
+		}
+	</script>
+
+</head>
+<body>
+	<table width="70%">
+		<tr>
+			<td>
+				<img src="cliff.jpg" width="110%"id="pic" onmouseover="change1()" onmouseout="change2()"></img>
+			</td>
+
+			<td>
+				<h1>微氏玉映</h1>
+				<h2 id="h2text">Vi Thi Ngoc Anh</h2>
+			</td>
+		</tr>
+	</table>		
+
+	<table>
+		<tr>
+			<td>
+				IG：<a href="https://www.instagram.com/_cerlyvi_" target="_blank">https://www.instagram.com/_cerlyvi_</a><br>
+				Tel: <a href="tel:09000xxxxx">09000xxxxx</a><br>
+				E-Mail: <a href="mailto:s1103158@gm.pu.edu.tw">s1103158@gm.pu.edu.tw</a><br>
+			</td>
+
+			<td>
+				大象席地而坐電影配樂<br>
+				<audio controls>
+					<source src="elephant.mp3" type="audio/mP3">
+				</audio><br>
+			</td>
+				
+			<td>
+				不要去臺灣<br>
+				<iframe src="https://www.youtube.com/embed/pW88QFpHXa8" allowfullscreen></iframe>
+			</td>
+		</tr>
+	</table>	
+	<a href=/>返回玉映網站首頁</a>	
+</body>
+</html>
