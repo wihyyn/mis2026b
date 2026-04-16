@@ -29,6 +29,7 @@ def index():
     link += "<a href=/welcome?u=玉映&d=靜宜資管&c=資訊管理導論>Get傳值</a><hr>"
     link += "<a href=/account>POST傳值</a><hr>"
     link += "<br><a href=/read>讀取Firestore資料</a><br>"
+    link += "<br><a href=/read1>讀取資料</a><br>"
     return link
 
 @app.route("/mis")
@@ -70,6 +71,22 @@ def read():
     docs = collection_ref.order_by("lab", direction=firestore.Query.DESCENDING).get()
     for doc in docs:         
         Result += str(doc.to_dict()) + "<br>"    
+    return Result
+
+@app.route("/read1")
+def read1):
+    Result = ""
+    keyword = "微"
+    db = firestore.client()
+    collection_ref = db.collection("靜宜資管")    
+    docs = collection_ref.get()
+    for doc in docs: 
+        teacher = doc.to_dict()
+        if keyword in teacher["name"]:        
+            Result += str(teacher) + "<br>"
+
+    if Result == "":
+        Result = "抱歉,查無此關鍵字姓名之老師資料"    
     return Result
 
 if __name__ == "__main__":
