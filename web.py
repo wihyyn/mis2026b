@@ -29,7 +29,8 @@ def index():
     link += "<a href=/welcome?u=玉映&d=靜宜資管&c=資訊管理導論>Get傳值</a><hr>"
     link += "<a href=/account>POST傳值</a><hr>"
     link += "<br><a href=/read>讀取Firestore資料</a><br>"
-    link += "<br><a href=/read1>讀取資料</a><br>"
+    link += "<br><a href=/read1>讀取資料</a><br>>"
+    link += "<br><a href=/search1>老師姓名查詢</a><br>"
     return link
 
 @app.route("/mis")
@@ -74,7 +75,7 @@ def read():
     return Result
 
 @app.route("/read1")
-def read1):
+def read1():
     Result = ""
     keyword = "微"
     db = firestore.client()
@@ -84,10 +85,28 @@ def read1):
         teacher = doc.to_dict()
         if keyword in teacher["name"]:        
             Result += str(teacher) + "<br>"
-
-    if Result == "":
-        Result = "抱歉,查無此關鍵字姓名之老師資料"    
+        if Result == "":
+            Result = "抱歉,查無此關鍵字姓名之老師資料"    
     return Result
+
+@app.route("/search1", methods=["GET", "POST"])
+def search():
+    db = firestore.client()
+    results = []
+    keyword = ""
+    if request.method == "POST":
+        keyword = request.form.get("keyword")
+        collection_ref = db.collection("靜宜資管")
+        docs = collection_ref.get()
+        for doc in docs:
+            user = doc.to_dict()
+            if keyword in user["name"]:
+                results.append({
+                    "name": user["name"],
+                    "lab": user["lab"]
+                })
+    return render_template("search.html", results=results, keyword=keyword)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
