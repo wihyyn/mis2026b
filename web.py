@@ -29,7 +29,7 @@ def index():
     link += "<a href=/welcome?u=玉映&d=靜宜資管&c=資訊管理導論>Get傳值</a><hr>"
     link += "<a href=/account>POST傳值</a><hr>"
     link += "<br><a href=/read>讀取Firestore資料</a><br>"
-    link += "<br><a href=/read1>讀取資料</a><br>>"
+    link += "<br><a href=/read1>讀取資料</a><br>"
     link += "<br><a href=/search1>老師姓名查詢</a><br>"
     return link
 
