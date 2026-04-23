@@ -35,6 +35,7 @@ def index():
     link += "<br><a href=/read1>讀取資料</a><br>"
     link += "<br><a href=/search1>老師姓名查詢</a><br>"
     link += "<br><a href=/spider1>爬取子青老師本學期課程</a><br>"
+    link += "<a href=/movie>爬取即將上映電影</a><hr>"
     return link
 
 @app.route("/mis")
@@ -122,6 +123,22 @@ def spider1():
     for i in result:
         R += i.text + i.get("href") + "<br>" 
     return R
+
+@app.route("/movie")
+def movie():
+    R = ""
+    url = "https://www.atmovies.com.tw/movie/next/"
+    Data = requests.get(url)
+    Data.encoding = "utf-8"
+    #print(Data.text)
+    sp = BeautifulSoup(Data.text, "html.parser")
+    result=sp.select(".filmListAllX li")
+    for item in result:
+        introduce = "https://www.atmovies.com.tw" + item.find("a").get("href")
+        R +=  "<a href=" + introduce + ">" + item.find("img").get("alt") + "</a><br>"
+        post = "https://www.atmovies.com.tw" + item.find("img").get("src")
+        R += "<img src=" + post + "> </img><br><br>" 
+    return R 
 
 if __name__ == "__main__":
     app.run(debug=True)
