@@ -36,6 +36,7 @@ def index():
     link += "<br><a href=/search1>老師姓名查詢</a><br>"
     link += "<br><a href=/spider1>爬取子青老師本學期課程</a><br>"
     link += "<a href=/movie>爬取即將上映電影</a><hr>"
+    link += "<a href=/movie2>爬取電影</a><hr>"
     return link
 
 @app.route("/mis")
@@ -139,6 +140,37 @@ def movie():
         post = "https://www.atmovies.com.tw" + item.find("img").get("src")
         R += "<img src=" + post + "> </img><br><br>" 
     return R 
+
+@app.route("/movie2")
+def movie2():
+    R = ""
+    db = firestore.client()
+    url = "http://www.atmovies.com.tw/movie/next/"
+    Data = requests.get(url)
+    Data.encoding = "utf-8"
+    sp = BeautifulSoup(Data.text, "html.parser")
+    lastUpdate = sp.find(class_="smaller09").text.replace("更新時間：", "")
+    result=sp.select(".filmListAllX li")
+    total = 0
+    for item in result:
+      total += 1
+      movie_id = item.find("a").get("href").replace("/movie/", "").replace("/", "")
+      title = item.find(class_="filmtitle").text
+      picture = "https://www.atmovies.com.tw" + item.find("img").get("src")
+      hyperlink = "https://www.atmovies.com.tw" + item.find("a").get("href")
+      showDate = item.find(class_="runtime").text[5:15]
+      doc = {
+          "title": title,
+          "picture": picture,
+          "hyperlink": hyperlink,
+          "showDate": showDate,
+          "lastUpdate": lastUpdate
+      }
+      doc_ref = db.collection("電影2B").document(movie_id)
+      doc_ref.set(doc)
+    R += "網站最近更新日期:" + lastUpdate + "<br>"
+    R += "總共爬取" + str(total) + "部電影到資料庫"
+    return R
 
 if __name__ == "__main__":
     app.run(debug=True)
