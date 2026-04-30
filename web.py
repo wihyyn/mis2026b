@@ -177,22 +177,24 @@ def spiderMovie():
 def searchMovie():
     db = firestore.client()
     results = []
-    keyword = ""   
+    keyword = ""
+    
     if request.method == "POST":
         keyword = request.form.get("keyword")
         collection_ref = db.collection("電影")
         docs = collection_ref.get()
+
         for doc in docs:
             movie = doc.to_dict()
             if keyword in movie["title"]:
                 results.append({
                     "title":  movie["title"],
-                    "movieId":movie["movieId"],
                     "picture": movie["picture"],
                     "hyperlink": movie["hyperlink"],
                     "showDate": movie["showDate"],
                     "lastUpdate": movie["lastUpdate"]
                 })
+
     return render_template("input.html", results=results, keyword=keyword)
 
 if __name__ == "__main__":
