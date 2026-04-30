@@ -36,7 +36,8 @@ def index():
     link += "<br><a href=/search1>老師姓名查詢</a><br>"
     link += "<br><a href=/spider1>爬取子青老師本學期課程</a><br>"
     link += "<a href=/movie>爬取即將上映電影</a><hr>"
-    link += "<a href=/movie2>爬取電影</a><hr>"
+    link += "<a href=/spiderMovie>爬取電影</a><hr>"
+    link += "<a href=/searchMovie>查詢電影資料庫</a><hr>"
     return link
 
 @app.route("/mis")
@@ -141,8 +142,8 @@ def movie():
         R += "<img src=" + post + "> </img><br><br>" 
     return R 
 
-@app.route("/movie2")
-def movie2():
+@app.route("/spiderMovie")
+def spiderMovie():
     R = ""
     db = firestore.client()
     url = "http://www.atmovies.com.tw/movie/next/"
@@ -171,6 +172,28 @@ def movie2():
     R += "網站最近更新日期:" + lastUpdate + "<br>"
     R += "總共爬取" + str(total) + "部電影到資料庫"
     return R
+
+@app.route("/searchMovie", methods=["GET", "POST"])
+def searchMovie():
+    db = firestore.client()
+    results = []
+    keyword = ""   
+    if request.method == "POST":
+        keyword = request.form.get("keyword")
+        collection_ref = db.collection("電影")
+        docs = collection_ref.get()
+        for doc in docs:
+            movie = doc.to_dict()
+            if keyword in movie["title"]:
+                results.append({
+                    "title":  movie["title"],
+                    "movieId":movie["movieId"],
+                    "picture": movie["picture"],
+                    "hyperlink": movie["hyperlink"],
+                    "showDate": movie["showDate"],
+                    "lastUpdate": movie["lastUpdate"]
+                })
+    return render_template("input.html", results=results, keyword=keyword)
 
 if __name__ == "__main__":
     app.run(debug=True)
