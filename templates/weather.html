@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>天氣查詢系統</title>
+    <style>
+        body { font-family: sans-serif; margin: 40px; line-height: 1.6; }
+        .result-item { margin-bottom: 10px; padding: 10px; border-bottom: 1px solid #ddd; }
+        .highlight { color: #0000ff; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>縣市天氣查詢</h2>
+        <form action="/weather" method="POST">
+            <input type="text" name="city" placeholder="請輸入縣市名稱" required>
+            <br>
+            <button type="submit">開始查詢</button>
+        </form>
+
+        {% if result %}
+            <div class="result-box">
+                {{ result | safe }}
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

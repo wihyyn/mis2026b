@@ -39,6 +39,7 @@ def index():
     link += "<a href=/spiderMovie>爬取電影</a><hr>"
     link += "<a href=/searchMovie>查詢電影資料庫</a><hr>"
     link += "<a href=/road>台中市十大肇事路口</a><hr>"
+    link += "<a href=/weather>縣市天氣查詢</a><hr>"
     return link
 
 @app.route("/mis")
@@ -215,6 +216,31 @@ def road():
     for item in JsonData:
         R += item["路口名稱"] + ",原因:" + item["主要肇因"] + "<br>"
     return R
+
+@app.route("/weather", methods=["GET", "POST"])
+def weather_query():
+    result_text = ""
+    if request.method == "POST":
+        city = request.form.get("city", "")
+        if city:
+            city = city.replace("台", "臺")
+            url = f"https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=rdec-key-123-45678-011121314&format=JSON&locationName={city}"
+            
+            try:
+                response = requests.get(url)
+                data = json.loads(response.text)
+                
+                if data["records"]["location"]:
+                    weather_element = data["records"]["location"][0]["weatherElement"]
+                    weather = weather_element[0]["time"][0]["parameter"]["parameterName"]
+                    rain = weather_element[1]["time"][0]["parameter"]["parameterName"]
+                    result_text = f"{city} 目前天氣預報：<br>{weather}，降雨機率：{rain}%"
+                else:
+                    result_text = "找不到該縣市，請輸入正確名稱（如：臺中市）。"
+            except Exception as e:
+                result_text = f"連線錯誤：{e}"
+                
+    return render_template("weather.html", result=result_text)
 
 if __name__ == "__main__":
     app.run(debug=True)
