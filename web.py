@@ -332,7 +332,7 @@ def webhook2():
         rate =  req.get("queryResult").get("parameters").get("rate")
         info = "我是微氏玉映開發的電影聊天機器人，您選擇的電影分級是：" + rate + "，相關電影：\n"
         db = firestore.client()
-        collection_ref = db.collection("電影含分級")
+        collection_ref = db.collection("本週新片含分級")
         docs = collection_ref.get()
         result = ""
         for doc in docs:
