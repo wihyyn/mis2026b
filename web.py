@@ -41,6 +41,7 @@ def index():
     link += "<a href=/road>台中市十大肇事路口</a><hr>"
     link += "<a href=/weather>縣市天氣查詢</a><hr>"
     link += "<a href=/rate>本週新片進DB</a><hr>"
+    link += "<a href=/web_demo>聊天機器人</a><hr>"
     return link
 
 @app.route("/mis")
@@ -342,6 +343,10 @@ def webhook2():
                 result += "介紹：" + dict["hyperlink"] + "\n\n"
         info += result
     return make_response(jsonify({"fulfillmentText": info}))
+
+@app.route("/web_demo")
+def web_demo():
+    return render_template("web_demo.html")
 
 
 if __name__ == "__main__":
