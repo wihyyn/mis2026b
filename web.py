@@ -9,6 +9,8 @@ import json
 import firebase_admin
 from firebase_admin import credentials, firestore
 
+from google import genai
+
 # 判斷是在 Vercel 還是本地
 if os.path.exists('serviceAccountKey.json'):
     # 本地環境：讀取檔案
@@ -22,6 +24,10 @@ else:
 firebase_admin.initialize_app(cred)
 
 app = Flask(__name__)
+
+# 在全域（函式外面）建立 Client 物件，只初始化一次即可，不用每次初始化
+api_key = 'AIzaSyCUsveR46B1lh_hYB4qx-dYBzSQ8cit6pg'
+client = genai.Client(api_key=api_key)
 
 @app.route("/")
 def index():
@@ -348,6 +354,16 @@ def webhook2():
 def web_demo():
     return render_template("web_demo.html")
 
+@app.route("/AI")
+def AI():
+    # 每次使用者拜訪該路徑時，直接使用全域的 client 呼叫模型
+    response = client.models.generate_content(
+        model='gemini-3.5-flash',
+        contents='我想查詢靜宜大學資管系的評價？',
+    )
+    
+    # 回傳生成的文字
+    return response.text
 
 if __name__ == "__main__":
     app.run(debug=True)
