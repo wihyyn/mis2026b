@@ -351,7 +351,8 @@ def webhook2():
                 result += "介紹：" + dict["hyperlink"] + "\n\n"
         info += result
      elif (action == "input.unknown"):
-
+        #info = req["queryResult"]["queryText"]
+        
         instruction_text = (
             "你是一個熱心且知識豐富的專業智慧助理。"
             "對於使用者的提問，請回覆重點的關鍵字，不要重述問題。"         
@@ -373,7 +374,7 @@ def webhook2():
             info = response.text
         else:
             info = "抱歉，我現在無法生成回應，請稍後再試。"
-        info = req["queryResult"]["queryText"]
+
     return make_response(jsonify({"fulfillmentText": info}))
 
 @app.route("/web_demo")
@@ -384,7 +385,7 @@ def web_demo():
 def AI():
     # 每次使用者拜訪該路徑時，直接使用全域的 client 呼叫模型
     response = client.models.generate_content(
-        model='gemini-3.5-flash',
+        model='gemini-3.1-flash',
         contents='我想查詢靜宜大學資管系的評價？',
     )
     
