@@ -365,7 +365,7 @@ def webhook2():
         )
 
         response = client.models.generate_content(
-            model='gemini-3.1-flash', 
+            model='gemini-3.5-flash', 
             contents=req["queryResult"]["queryText"],
             config=ai_config,
         )
@@ -385,7 +385,7 @@ def web_demo():
 def AI():
     # 每次使用者拜訪該路徑時，直接使用全域的 client 呼叫模型
     response = client.models.generate_content(
-        model='gemini-3.1-flash',
+        model='gemini-3.5-flash',
         contents='我想查詢靜宜大學資管系的評價？',
     )
     
@@ -400,7 +400,7 @@ def ask():
             return "請輸入內容", 400
         try:
             response = client.models.generate_content(
-                model='gemini-3.1-flash',
+                model='gemini-3.5-flash',
                 contents=user_prompt,
             )
             return response.text
