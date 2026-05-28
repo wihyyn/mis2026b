@@ -411,6 +411,10 @@ def ask():
         # 當使用者直接打開網頁 (GET) 時，顯示輸入框畫面
         return render_template("ask.html")
 
+@app.route("/messenger")
+def messenger():
+    return render_template("messenger.html")
+
 if __name__ == "__main__":
     app.run(debug=True)
     
