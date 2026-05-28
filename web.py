@@ -25,9 +25,9 @@ firebase_admin.initialize_app(cred)
 
 app = Flask(__name__)
 
-# 在全域（函式外面）建立 Client 物件，只初始化一次即可，不用每次初始化
-api_key = 'AIzaSyCUsveR46B1lh_hYB4qx-dYBzSQ8cit6pg'
-client = genai.Client(api_key=api_key)
+# 建立 Client 時保持括號空白！
+# SDK 會自動去抓你設定的 GEMINI_API_KEY 環境變數
+client = genai.Client()
 
 @app.route("/")
 def index():
@@ -48,6 +48,7 @@ def index():
     link += "<a href=/weather>縣市天氣查詢</a><hr>"
     link += "<a href=/rate>本週新片進DB</a><hr>"
     link += "<a href=/web_demo>聊天機器人</a><hr>"
+    link += "<a href=/ask>詢問 Gemini</a><hr>"
     return link
 
 @app.route("/mis")
@@ -364,6 +365,25 @@ def AI():
     
     # 回傳生成的文字
     return response.text
+
+@app.route('/ask', methods=['GET', 'POST']) 
+def ask():
+    if request.method == "POST":
+        user_prompt = request.form.get('prompt', '')
+        if not user_prompt:
+            return "請輸入內容", 400
+        try:
+            response = client.models.generate_content(
+                model='gemini-3.5-flash',
+                contents=user_prompt,
+            )
+            return response.text
+        except Exception as e:
+            return f"發生錯誤: {str(e)}", 500
+
+    else:    
+        # 當使用者直接打開網頁 (GET) 時，顯示輸入框畫面
+        return render_template("ask.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
