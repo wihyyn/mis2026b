@@ -415,6 +415,32 @@ def ask():
 def messenger():
     return render_template("messenger.html")
 
+@app.route("/webhook3", methods=["POST"])
+def webhook3():
+    # build a request object
+    req = request.get_json(force=True)
+    # fetch queryResult from json
+    action =  req["queryResult"]["action"]
+    #msg =  req["queryResult"]["queryText"]
+    #info = "我是微氏玉映設計的機器人，動作：" + action + "； 查詢內容：" + msg
+
+    if (action == "rateChoice"):
+        rate =  req["queryResult"]["parameters"]["rate"]
+        info = "我是天氣機器人，您選擇的城市是：" + rate
+    elif (action == "CityWeather"):
+        city =  req.get("queryResult").get("parameters").get("city")
+        token = "rdec-key-123-45678-011121314"
+        url = "https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=" + token + "&format=JSON&locationName=" + str(city)
+        Data = requests.get(url)
+        Weather = json.loads(Data.text)["records"]["location"][0]["weatherElement"][0]["time"][0]["parameter"]["parameterName"]
+        Rain = json.loads(Data.text)["records"]["location"][0]["weatherElement"][1]["time"][0]["parameter"]["parameterName"]
+        MinT = json.loads(Data.text)["records"]["location"][0]["weatherElement"][2]["time"][0]["parameter"]["parameterName"]
+        MaxT = json.loads(Data.text)["records"]["location"][0]["weatherElement"][4]["time"][0]["parameter"]["parameterName"]
+        info = city + "的天氣是" + Weather + "，降雨機率：" + Rain + "%"
+        info += "，溫度：" + MinT + "-" + MaxT + "度"
+    return make_response(jsonify({"fulfillmentText": info}))
+
+
 if __name__ == "__main__":
     app.run(debug=True)
     
